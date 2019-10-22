@@ -24,7 +24,6 @@ class Vertex:
         :param edge: The edge to add.
         :return: None
         """
-
         if edge not in self.edges:
             self.edges.append(edge)
             self.num_edges = self.num_edges + 1
