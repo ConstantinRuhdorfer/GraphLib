@@ -18,12 +18,14 @@ class Graph:
         :param edges: List of edges
         :param directed: Wether the graph is directed.
         """
-
         self.num_verticies = len(verticies)
         self.verticies = verticies
         self.edges = edges
         self.num_edges = len(edges)
         self.directed = directed
+
+        self.__current_highest_vertex_id = self.__calc_highest_id(verticies)
+        self.__current_highest_edge_id = self.__calc_highest_id(edges)
 
         if directed:
             for edge in edges:
@@ -59,9 +61,162 @@ class Graph:
                 input_vertecies = line.split()
                 edges.append(Edge(vertecies[int(input_vertecies[0])],
                                   vertecies[int(input_vertecies[1])],
-                                  i,
+                                  i-1,
                                   directed))
         return cls(vertecies, edges, directed)
+
+    def insert_edge(self, edge: Edge) -> None:
+        """
+        Inserts a edge to the graph.
+        If the vertecies do not already exist they are added to the graph.
+        Performs health checks, e.g. no same vertex/edge ids.
+
+        :param edge: The edge to add.
+        :return: None
+        """
+        if self.directed != edge.directed:
+            raise ValueError(
+                f'Graph is directed {self.directed} '
+                f'and edge is directed {edge.directed}')
+
+        for elem in self.edges:
+            if elem.id == edge.id:
+                raise ValueError(f'Edge id already exists in the graph.')
+
+        try:
+            self.insert_vertex(edge.vertex_a)
+        except ValueError:
+            pass
+
+        try:
+            self.insert_vertex(edge.vertex_b)
+        except ValueError:
+            pass
+
+        if edge.id > self.__current_highest_edge_id:
+            self.__current_highest_edge_id = edge.id
+        self.edges.append(edge)
+
+    def create_edge(self, vertex_a: Vertex, vertex_b: Vertex,
+                    edge_id: int = None) -> Edge:
+        """
+        Creates an edge and adds it to the graph.
+
+        :param vertex_a: Vertex
+        :param vertex_b: Vertex
+        :param edge_id: A edge id. If None one is automatically assigned.
+                        Defaults to None.
+        :return: Created Edge
+        """
+        if edge_id is None:
+            edge_id = self.get_free_edge_id()
+
+        new_edge = Edge(vertex_a, vertex_b, edge_id, self.directed)
+        self.insert_edge(new_edge)
+        return new_edge
+
+    def get_edge_by_id(self, edge_id: int) -> Edge:
+        """
+        Gets a vertex from the graph by id.
+
+        :param edge_id: The id to be searched.
+        :return: The found vertex
+        """
+        for edge in self.edges:
+            if edge.id == edge_id:
+                return edge
+        raise ValueError(f'{edge_id} does not exist in {self.edges}')
+
+    def insert_vertex(self, vertex: Vertex) -> None:
+        """
+        Inserts a vertex into the graph.
+        Performs health checks, e.g. no same vertex ids in a graph.
+
+        :param vertex: The vertex to add.
+        :return: None
+        """
+
+        for elem in self.verticies:
+            if elem.id == vertex.id:
+                raise ValueError(f'Vertex id already exists in the graph.')
+
+        if vertex.id > self.__current_highest_vertex_id:
+            self.__current_highest_vertex_id = vertex.id
+        self.verticies.append(vertex)
+
+    def create_vertex(self, contained_edges: List = None,
+                      vertex_id: int = None) -> Vertex:
+        """
+        Creates a vertex and inserts it into the graph.
+        If the vertex has edges assaigned to it they are
+        also added to the graph.
+
+        :param contained_edges: List of edges on the vertex.
+                                Note: They will be added to the graph.
+        :param vertex_id: A vertex id. If None one is automatically assigned.
+                          Defaults to None.
+        :return: Created Vertex
+        """
+        if vertex_id is None:
+            vertex_id = self.get_free_vertex_id()
+
+        if contained_edges is not None:
+            for edge in contained_edges:
+                self.insert_edge(edge)
+            new_vertex = Vertex(vertex_id, contained_edges)
+        else:
+            new_vertex = Vertex(vertex_id)
+
+        self.insert_vertex(new_vertex)
+        return new_vertex
+
+    def get_vertex_by_id(self, vertex_id: int) -> Vertex:
+        """
+        Gets a vertex from the graph by id.
+
+        :param vertex_id: The id to be searched.
+        :return: The found vertex
+        """
+        for vertex in self.verticies:
+            if vertex.id == vertex_id:
+                return vertex
+        raise ValueError(f'{vertex_id} does not exist in {self.vertecies}')
+
+    def get_free_edge_id(self) -> int:
+        """
+        Returns a free edge id and marks it as used.
+
+        :return: A edge id.
+        """
+        self.__current_highest_edge_id = self.__current_highest_edge_id + 1
+        return self.__current_highest_edge_id
+
+    def get_free_vertex_id(self) -> int:
+        """
+        Returns a free vertex id and marks it as used.
+
+        :return: A vertex id.
+        """
+        self.__current_highest_vertex_id = self.__current_highest_vertex_id + 1
+        return self.__current_highest_vertex_id
+
+    def __calc_highest_id(self, list: List) -> int:
+        """
+        Takes in list of elements with an id property
+        and returns the highest one.
+
+        :param list: The list to check
+        :return: The highest id as int
+        """
+        highest = -1
+        for elem in list:
+            try:
+                assert(isinstance(elem.id, int))
+                highest = elem.id if elem.id > highest else highest
+            except AttributeError:
+                raise AttributeError(
+                    f'Element {elem} needs to have an integer id property')
+        return highest
 
     def __eq__(self, other: Graph) -> bool:
         """
