@@ -11,7 +11,7 @@ setuptools.setup(
     description="A small library for representing graphs for the class of Combinatorial Optimization at Baden-Wuerttemberg Cooperative State University Stuttgart.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/ConstantinRuhdorfer/GraphLib",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
