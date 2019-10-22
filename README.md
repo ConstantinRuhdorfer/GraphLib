@@ -5,7 +5,7 @@ The input files also come from this repo.
 
 # A note on versions
 
-Version 1.0.0 of this repo just contains the graph data structure which does not implement any of the algorithms presented in the class CombOpt.
+Version 1.x.x of this repo just contains the graph data structure which does not implement any of the algorithms presented in the class CombOpt.
 It is released as a pip package and as a source code archieve.
 Use this when you want to use the datastructure for the class because you - like me - can't work with the c++ template.
 
@@ -16,12 +16,16 @@ The relevant folders are:
 ```
 .
 +-- graph_lib/            All relevant classes are here
+|   +-- directed_graph.py
+|   +-- directed_edge.py
 |   +-- graph.py
 |   +-- edge.py
 |   +-- vertex.py
 +-- input/                Some sample input files are here
 +-- test/                 All unittests are here
 ```
+
+Notice that the Directed* Versions inherit from their respective base classes.
 
 # How to use
 
