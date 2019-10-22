@@ -48,6 +48,46 @@ class TestGraph(unittest.TestCase):
         g2 = Graph.from_file(self.test_file_path_big, False)
         self.assertEqual(g1, g2)
 
+    def test_get_vertex_by_id(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        actual = g.get_vertex_by_id(2)
+        expected = v.Vertex(2)
+        self.assertEqual(actual, expected)
+
+    def test_insert_vertex(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        vertex_id = g.get_free_vertex_id()
+        expected = v.Vertex(vertex_id)
+        g.insert_vertex(expected)
+        actual = g.get_vertex_by_id(vertex_id)
+        self.assertEqual(actual, expected)
+
+    def test_create_vertex(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        expected = g.create_vertex()
+        actual = g.get_vertex_by_id(expected.id)
+        self.assertEqual(actual, expected)
+
+    def test_get_edge_by_id(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        actual = g.get_edge_by_id(0)
+        expected = e.Edge(v.Vertex(0), v.Vertex(1), 0, False)
+        self.assertEqual(actual, expected)
+
+    def test_insert_edge(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        edge_id = g.get_free_edge_id()
+        expected = e.Edge(v.Vertex(12), v.Vertex(0), edge_id, False)
+        g.insert_edge(expected)
+        actual = g.get_edge_by_id(edge_id)
+        self.assertEqual(actual, expected)
+
+    def test_create_edge(self):
+        g = Graph.from_file(self.test_file_path_small, False)
+        expected = g.create_edge(v.Vertex(12), v.Vertex(37))
+        actual = g.get_edge_by_id(expected.id)
+        self.assertEqual(actual, expected)
+
     def tearDown(self) -> None:
         """
         Things to do on test suite completion.

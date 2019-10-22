@@ -31,7 +31,7 @@ class Vertex:
 
     def __eq__(self, other: Vertex) -> bool:
         """
-        Compares two vertecies by id.
+        Compares two vertecies by id and edges.
 
         :param other: Vertex to compare against
         :return: Equality as boolean
