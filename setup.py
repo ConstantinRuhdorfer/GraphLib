@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="graph_lib_constantin_ruhdorfer",
-    version="1.0.0",
+    version="1.0.1",
     author="Constantin Ruhdorfer",
     author_email="constantin.ruhdorfer@gmnx.de",
     description="A small library for representing graphs for the class of Combinatorial Optimization at Baden-Wuerttemberg Cooperative State University Stuttgart.",
