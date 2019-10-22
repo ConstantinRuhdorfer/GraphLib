@@ -8,33 +8,23 @@ from graph_lib.vertex import Vertex
 
 class Graph:
 
-    def __init__(self, verticies: List, edges: List, directed: bool):
+    def __init__(self, verticies: List[Vertex], edges: List[Edge]):
         """
         Constructs a Graph.
-        Performs a health check on the input,
-        e.g. a directed graph can only have directed edges.
 
         :param vertecies: List of vertecies
         :param edges: List of edges
-        :param directed: Wether the graph is directed.
         """
         self.num_verticies = len(verticies)
         self.verticies = verticies
         self.edges = edges
         self.num_edges = len(edges)
-        self.directed = directed
 
-        self.__current_highest_vertex_id = self.__calc_highest_id(verticies)
-        self.__current_highest_edge_id = self.__calc_highest_id(edges)
-
-        if directed:
-            for edge in edges:
-                if edge.directed is False:
-                    raise ValueError(
-                        f'{edge} not directed eventough the graph {self} is.')
+        self._current_highest_vertex_id = self._calc_highest_id(verticies)
+        self._current_highest_edge_id = self._calc_highest_id(edges)
 
     @classmethod
-    def from_file(cls: Graph, file: str, directed: bool) -> Graph:
+    def from_file(cls: Graph, file: str) -> Graph:
         """
         Constructs a graph from a file of the form:
 
@@ -61,9 +51,8 @@ class Graph:
                 input_vertecies = line.split()
                 edges.append(Edge(vertecies[int(input_vertecies[0])],
                                   vertecies[int(input_vertecies[1])],
-                                  i-1,
-                                  directed))
-        return cls(vertecies, edges, directed)
+                                  i-1))
+        return cls(vertecies, edges)
 
     def insert_edge(self, edge: Edge) -> None:
         """
@@ -74,13 +63,8 @@ class Graph:
         :param edge: The edge to add.
         :return: None
         """
-        if self.directed != edge.directed:
-            raise ValueError(
-                f'Graph is directed {self.directed} '
-                f'and edge is directed {edge.directed}')
-
         for elem in self.edges:
-            if elem.id == edge.id:
+            if elem == edge:
                 raise ValueError(f'Edge id already exists in the graph.')
 
         try:
@@ -93,8 +77,8 @@ class Graph:
         except ValueError:
             pass
 
-        if edge.id > self.__current_highest_edge_id:
-            self.__current_highest_edge_id = edge.id
+        if edge.id > self._current_highest_edge_id:
+            self._current_highest_edge_id = edge.id
         self.edges.append(edge)
 
     def create_edge(self, vertex_a: Vertex, vertex_b: Vertex,
@@ -111,7 +95,7 @@ class Graph:
         if edge_id is None:
             edge_id = self.get_free_edge_id()
 
-        new_edge = Edge(vertex_a, vertex_b, edge_id, self.directed)
+        new_edge = Edge(vertex_a, vertex_b, edge_id)
         self.insert_edge(new_edge)
         return new_edge
 
@@ -140,8 +124,8 @@ class Graph:
             if elem.id == vertex.id:
                 raise ValueError(f'Vertex id already exists in the graph.')
 
-        if vertex.id > self.__current_highest_vertex_id:
-            self.__current_highest_vertex_id = vertex.id
+        if vertex.id > self._current_highest_vertex_id:
+            self._current_highest_vertex_id = vertex.id
         self.verticies.append(vertex)
 
     def create_vertex(self, contained_edges: List = None,
@@ -188,8 +172,8 @@ class Graph:
 
         :return: A edge id.
         """
-        self.__current_highest_edge_id = self.__current_highest_edge_id + 1
-        return self.__current_highest_edge_id
+        self._current_highest_edge_id = self._current_highest_edge_id + 1
+        return self._current_highest_edge_id
 
     def get_free_vertex_id(self) -> int:
         """
@@ -197,10 +181,10 @@ class Graph:
 
         :return: A vertex id.
         """
-        self.__current_highest_vertex_id = self.__current_highest_vertex_id + 1
-        return self.__current_highest_vertex_id
+        self._current_highest_vertex_id = self._current_highest_vertex_id + 1
+        return self._current_highest_vertex_id
 
-    def __calc_highest_id(self, list: List) -> int:
+    def _calc_highest_id(self, list: List) -> int:
         """
         Takes in list of elements with an id property
         and returns the highest one.
@@ -230,15 +214,10 @@ class Graph:
                 return False
             if len(self.edges) != len(other.edges):
                 return False
-            if self.directed != other.directed:
-                return False
             return (self.edges == other.edges
                     and self.verticies == other.verticies)
         return False
 
     def __str__(self) -> str:
-        if self.directed:
-            f'Directed Graph with {self.num_verticies}' \
-                f' number of vertecies and edges {self.edges}'
         return f'Graph with {self.num_verticies}' \
             f' number of vertecies and edges {self.edges}'

@@ -17,7 +17,7 @@ class TestVertex(unittest.TestCase):
     def test_add_edge(self) -> None:
         a = Vertex(2, [])
         b = Vertex(3, [])
-        test_edge = e.Edge(a, b, 1, False)
+        test_edge = e.Edge(a, b, 1)
 
         actual = Vertex(1, [])
         actual.add_edge(test_edge)
