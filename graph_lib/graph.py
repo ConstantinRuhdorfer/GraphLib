@@ -8,13 +8,15 @@ from graph_lib.vertex import Vertex
 
 class Graph:
 
-    def __init__(self, verticies: List, edges: List, directed: bool = False):
+    def __init__(self, verticies: List, edges: List, directed: bool):
         """
         Constructs a Graph.
+        Performs a health check on the input,
+        e.g. a directed graph can only have directed edges.
 
         :param vertecies: List of vertecies
         :param edges: List of edges
-        :param directed: Wether the graph is directed. Defaults to False.
+        :param directed: Wether the graph is directed.
         """
 
         self.num_verticies = len(verticies)
@@ -23,8 +25,14 @@ class Graph:
         self.num_edges = len(edges)
         self.directed = directed
 
+        if directed:
+            for edge in edges:
+                if edge.directed is False:
+                    raise ValueError(
+                        f'{edge} not directed eventough the graph {self} is.')
+
     @classmethod
-    def from_file(cls: Graph, file: str) -> Graph:
+    def from_file(cls: Graph, file: str, directed: bool) -> Graph:
         """
         Constructs a graph from a file of the form:
 
@@ -50,13 +58,14 @@ class Graph:
                     continue
                 input_vertecies = line.split()
                 edges.append(Edge(vertecies[int(input_vertecies[0])],
-                                  vertecies[int(input_vertecies[1])], i))
-
-        return cls(vertecies, edges)
+                                  vertecies[int(input_vertecies[1])],
+                                  i,
+                                  directed))
+        return cls(vertecies, edges, directed)
 
     def __eq__(self, other: Graph) -> bool:
         """
-        Comapres two graphs by edges and verticies.
+        Comapres two graphs by edges, verticies and direction.
 
         :param other: The graph to compare to
         :return: Equality as boolean
@@ -66,10 +75,15 @@ class Graph:
                 return False
             if len(self.edges) != len(other.edges):
                 return False
+            if self.directed != other.directed:
+                return False
             return (self.edges == other.edges
                     and self.verticies == other.verticies)
         return False
 
     def __str__(self) -> str:
-        return f'Graph with {self.num_verticies} number of vertecies'
-        + f'and edges {self.edges}'
+        if self.directed:
+            f'Directed Graph with {self.num_verticies}' \
+                f' number of vertecies and edges {self.edges}'
+        return f'Graph with {self.num_verticies}' \
+            f' number of vertecies and edges {self.edges}'
