@@ -72,6 +72,35 @@ graph_lib
 
 Just fork this project or download the source code from the release section.
 
+# Unittests
+
+This project uses the default unittest package for testing.
+You can run them all by running the following in project directory:
+
+```sh
+python3 -m unittest discover
+```
+
+If you only want to test a single file: 
+
+```sh
+python3 -m unittest test/test_graph.py
+```
+
+This project aims to have a high test coverage.
+
+# Example usage
+
+A basix example:
+
+```python
+from graph_lib.graph import Graph
+
+a_graph = Graph.from_file("input/graph1.plain", directed=False)
+some_edge = a_graph.get_edge_by_id(2)
+some_vertex = some_edge.vertex_a
+```
+
 # Why?
 
 Because I can't write c++ and the original template was in c++.
