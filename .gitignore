@@ -10,3 +10,8 @@ venv
 
 # Python
 __pycache__
+
+# Setuptools
+build/*
+dist/*
+graph_lib_constantin_ruhdorfer.egg-info/*
