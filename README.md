@@ -25,7 +25,7 @@ The relevant folders are:
 +-- test/                 All unittests are here
 ```
 
-Notice that the Directed* Versions inherit from their respective base classes.
+Notice that the Directed\* Versions inherit from their respective base classes.
 
 # How to use
 
@@ -85,7 +85,7 @@ You can run them all by running the following in project directory:
 python3 -m unittest discover
 ```
 
-If you only want to test a single file: 
+If you only want to test a single file:
 
 ```sh
 python3 -m unittest test/test_graph.py
@@ -100,7 +100,7 @@ A basix example:
 ```python
 from graph_lib.graph import Graph
 
-a_graph = Graph.from_file("input/graph1.plain", directed=False)
+a_graph = Graph.from_file("input/graph1.plain")
 some_edge = a_graph.get_edge_by_id(2)
 some_vertex = some_edge.vertex_a
 ```

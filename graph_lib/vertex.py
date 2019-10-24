@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List
 
-from graph_lib.edge import Edge
+import graph_lib.edge as e
 
 
 class Vertex:
@@ -17,7 +17,7 @@ class Vertex:
         self.edges: List = edges
         self.num_edges: int = len(edges)
 
-    def add_edge(self, edge: Edge) -> None:
+    def add_edge(self, edge: e.Edge) -> None:
         """
         Appends an edge to the vertex if it does not exist yet.
 
