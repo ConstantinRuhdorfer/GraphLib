@@ -54,6 +54,33 @@ class Graph:
                                   i-1))
         return cls(vertecies, edges)
 
+    def get_neighbours(self, vertex: Vertex) -> List[Vertex]:
+        """
+        Given a vertex returns all neighbours in the graph.
+
+        :param vertex: The vertex to be checked.
+        :return: The list of neighbours.
+        """
+        result: List[Vertex] = []
+        for elem in self.edges:
+            if elem.vertex_a == vertex:
+                result.append(elem.vertex_b)
+            elif elem.vertex_b == vertex:
+                result.append(elem.vertex_a)
+        return result
+
+    # def get_connected_components(self):
+    #     """
+
+    #     """
+    #     visited = set()
+    #     connectedComponents = set()
+
+    #     for i, vertex in enumerate(self.num_verticies):
+    #         if vertex not in visited:
+    #             visited.add(vertex)
+    #             current = [vertex]
+
     def insert_edge(self, edge: Edge) -> None:
         """
         Inserts a edge to the graph.

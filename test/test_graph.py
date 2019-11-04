@@ -32,6 +32,24 @@ class TestGraph(unittest.TestCase):
                         + f'and Test: {test_vertecies} == Graph: {g.verticies}'
                         + f'and Test: {test_edges} == Graph: {g.edges}')
 
+    def test_graph_constructor_from_file(self):
+        g = Graph.from_file(self.test_file_path_small)
+        actual_vertecies = [elem.id for elem in g.verticies]
+        actual_edges = [elem.id for elem in g.edges]
+        actual_vertecies_len, actual_edges_len = len(
+            actual_edges), len(actual_vertecies)
+
+        actual = (actual_vertecies == [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                  and actual_edges == [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                  and actual_vertecies_len == 9
+                  and actual_edges_len == 9)
+
+        self.assertTrue(actual,
+                        f'Failed: Graph: {g.num_edges}==Test: 9'
+                        + f'and Graph: {g.num_verticies}==Test: 9'
+                        + f'and Test: {actual_vertecies}==Graph: {g.verticies}'
+                        + f'and Test: {actual_edges}==Graph: {g.edges}')
+
     def test_parser_for_number_of_vertecies(self):
         g = Graph.from_file(self.test_file_path_small)
         self.assertEqual(g.num_verticies, 9)
@@ -40,6 +58,12 @@ class TestGraph(unittest.TestCase):
         g1 = Graph.from_file(self.test_file_path_big)
         g2 = Graph.from_file(self.test_file_path_big)
         self.assertEqual(g1, g2)
+
+    def test_get_neighbours(self):
+        g1 = Graph.from_file(self.test_file_path_small)
+        actual = [elem.id for elem in g1.get_neighbours(g1.verticies[0])]
+        expected = [1, 2, 6]
+        self.assertEqual(actual, expected)
 
     def test_get_vertex_by_id(self):
         g = Graph.from_file(self.test_file_path_small)
